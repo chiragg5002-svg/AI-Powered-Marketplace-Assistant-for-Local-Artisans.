@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Your Craft</title>
+    <style>
+      /* Background & layout */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      /* Form container */
+      .upload-container {
+        background: #ffffff;
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 400px;
+      }
+
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      input,
+      select,
+      textarea,
+      button {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background: #45a049;
+      }
+
+      /* Image preview */
+      #imagePreview {
+        display: block;
+        margin: 10px auto;
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      #successMsg {
+        text-align: center;
+        color: green;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="upload-container">
+      <h2>Upload Your Craft</h2>
+
+      <form
+        id="uploadCraftForm"
+        method="POST"
+        action="upload.php"
+        enctype="multipart/form-data"
+      >
+        <input
+          type="text"
+          name="craft_name"
+          placeholder="Craft Name"
+          required
+        />
+
+        <select name="category" required>
+          <option value="">Select Category</option>
+          <option value="Handmade">Handmade</option>
+          <option value="Painted">Painted</option>
+          <option value="Jewelry">Jewelry</option>
+          <option value="Decorative">Decorative</option>
+        </select>
+
+        <textarea
+          name="description"
+          placeholder="Description"
+          required
+        ></textarea>
+        <input type="number" name="price" placeholder="Price (optional)" />
+
+        <input type="file" name="image" id="image" accept="image/*" required />
+        <img id="imagePreview" src="" alt="" style="display: none" />
+
+        <button type="submit">Upload Craft</button>
+        <div id="successMsg"></div>
+      </form>
+    </div>
+
+    <script>
+      // Image preview before upload
+      const imageInput = document.getElementById("image");
+      const imagePreview = document.getElementById("imagePreview");
+
+      imageInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            imagePreview.setAttribute("src", e.target.result);
+            imagePreview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          imagePreview.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

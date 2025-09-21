@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Craft Store</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&w=1920&q=80")
+          no-repeat center center fixed;
+        background-size: cover;
+        position: relative;
+        z-index: 0;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.6);
+        z-index: -1;
+      }
+      .header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 12px 20px;
+        background: rgba(74, 20, 140, 0.9);
+        color: white;
+      }
+      .signup-btn {
+        background: #ff4081;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-right: 15px;
+      }
+      .menu-btn {
+        font-size: 24px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: white;
+      }
+      .dropdown {
+        display: none;
+        position: absolute;
+        top: 55px;
+        right: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        z-index: 1000;
+      }
+      .dropdown a {
+        display: block;
+        padding: 8px;
+        text-decoration: none;
+        color: #333;
+      }
+      .dropdown a:hover {
+        background: #eee;
+      }
+      .search-container {
+        text-align: center;
+        margin: 30px 0;
+      }
+      .search-container input {
+        width: 50%;
+        padding: 12px;
+        border: 2px solid #4a148c;
+        border-radius: 25px;
+        font-size: 16px;
+        outline: none;
+        background: white;
+      }
+      .upload-container {
+        text-align: center;
+        margin: 10px 0 30px;
+      }
+      .upload-btn {
+        background: linear-gradient(135deg, #4a148c, #7b1fa2);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+      }
+      .upload-btn:hover {
+        transform: scale(1.05);
+      }
+      .categories {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 20px 0;
+      }
+      .categories button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        background: #ffcc80;
+        color: #4a148c;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .categories button:hover {
+        background: #ff9800;
+        color: white;
+      }
+      .filter-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        position: relative;
+      }
+      .filter-btn {
+        background: linear-gradient(135deg, #ff4081, #4a148c);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s;
+      }
+      .filter-btn:hover {
+        transform: scale(1.05);
+      }
+      .filter-dropdown {
+        display: none;
+        position: absolute;
+        top: 55px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        width: 220px;
+        z-index: 1000;
+      }
+      .filter-dropdown button,
+      .filter-dropdown input {
+        display: block;
+        margin: 8px 0;
+        width: 100%;
+      }
+      .filter-dropdown button {
+        background: #e1bee7;
+        border: none;
+        padding: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #4a148c;
+      }
+      .filter-dropdown button:hover {
+        background: #ba68c8;
+        color: white;
+      }
+      .filter-dropdown input {
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+      .items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
+      .item-card {
+        background: white;
+        width: 220px;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.2s;
+        cursor: pointer;
+      }
+      .item-card:hover {
+        transform: scale(1.05);
+      }
+      .item-card img {
+        width: 100%;
+        height: 150px;
+        border-radius: 10px;
+        object-fit: cover;
+        position: relative;
+      }
+      .item-card h4 {
+        margin: 10px 0 5px;
+        color: #333;
+      }
+      .item-card p {
+        color: #666;
+        font-size: 14px;
+      }
+      .buy-btn {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-weight: bold;
+        width: 100%;
+      }
+      .buy-btn:hover {
+        background: #388e3c;
+      }
+      .modal,
+      .auth-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      }
+      .modal-content,
+      .auth-content {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        width: 400px;
+        max-width: 90%;
+        text-align: center;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      .modal-content img {
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-bottom: 15px;
+      }
+      .modal-buy-btn {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+      .modal-buy-btn:hover {
+        background: #388e3c;
+      }
+      .auth-content h2 {
+        margin-bottom: 15px;
+        color: #4a148c;
+      }
+      .auth-content input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+      }
+      .auth-content button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background: #4a148c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .auth-content p {
+        margin-top: 10px;
+        font-size: 14px;
+      }
+      .auth-content a {
+        color: #ff4081;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #333;
+      }
+      .hover-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+      .image-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+      .image-container:hover .hover-text {
+        opacity: 1;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .upload-container {
+        display: none; /* hidden initially */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <button class="signup-btn" onclick="openAuthModal('signin')">
+        Sign In
+      </button>
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="dropdown" id="dropdownMenu">
+        <a href="#">Help</a>
+        <a href="#">Settings</a>
+      </div>
+    </div>
+    <div class="search-container">
+      <input
+        type="text"
+        id="searchBox"
+        placeholder="Search for Handmade metal craft, painting, pottery..."
+      />
+    </div>
+    <div class="upload-middle">
+    <button
+      class="upload-btn"
+      onclick="window.location.href='upload_craft.html'"
+    >
+      Upload Your Craft
+    </button>
+
+    <div class="categories">
+      <button onclick="showItems('all')">All Categories</button>
+      <button onclick="showItems('pottery')">Pottery</button>
+      <button onclick="showItems('paintings')">Paintings</button>
+      <button onclick="showItems('craft')">Handmade Metal Craft</button>
+      <button onclick="showItems('furniture')">Furniture</button>
+    </div>
+    <div class="filter-container">
+      <button class="filter-btn" onclick="toggleFilter()">Price Filter</button>
+      <div class="filter-dropdown" id="priceDropdown">
+        <button onclick="sortItems('low')">Low → High</button>
+        <button onclick="sortItems('high')">High → Low</button>
+        <input type="number" id="minPrice" placeholder="Min Price" />
+        <input type="number" id="maxPrice" placeholder="Max Price" />
+        <button onclick="filterByRange()">Apply</button>
+      </div>
+    </div>
+    <div class="items" id="itemsList"></div>
+    <div class="modal" id="productModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">×</span>
+        <img id="modalImg" src="" />
+        <h2 id="modalName"></h2>
+        <p id="modalPrice"></p>
+        <p id="modalDetails"></p>
+        <button class="modal-buy-btn" id="modalBuyBtn">Buy Now</button>
+      </div>
+    </div>
+    <div class="auth-modal" id="authModal">
+      <div class="auth-content">
+        <span class="close-btn" onclick="closeAuthModal()">×</span>
+        <h2 id="authTitle">Sign In</h2>
+        <form id="authForm" method="POST">
+          <input
+            type="email"
+            name="email"
+            id="authEmail"
+            placeholder="Enter Email"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            id="authPassword"
+            placeholder="Enter Password"
+            required
+          />
+          <input
+            type="password"
+            name="confirm_password"
+            id="authConfirm"
+            placeholder="Confirm Password"
+            style="display: none"
+          />
+          <input
+            type="hidden"
+            name="action"
+            id="authHiddenAction"
+            value="signin"
+          />
+          <button type="submit" id="authAction">Sign In</button>
+        </form>
+        <p id="toggleText">
+          Don't have an account? <a onclick="switchAuth('signup')">Sign Up</a>
+        </p>
+        <div id="successMsg" style="margin-top: 10px; color: green"></div>
+      </div>
+    </div>
+
+    <script>
+      const itemsData = {
+        pottery: [
+          {
+            name: "Persian Lusterware",
+            price: 45000,
+            img: "https://i.pinimg.com/1200x/f5/92/fa/f592fae3dd9e367826274049cab82d53.jpg",
+            Details:
+              "Persian Lusterware is a type of ceramic pottery developed in Iran between the 9th and 13th centuries CE. It is distinguished by metallic glazes that create a shimmering, reflective surface, often in gold, copper, or silver tones. Lusterware was used for decorative bowls, plates, and tiles, often featuring intricate floral or geometric patterns. This craft is celebrated for its elegance, technical skill, and influence on later Islamic and European ceramics.",
+          },
+          {
+            name: "Greek Black-Figure Amphora",
+            price: 40000,
+            img: "https://i.pinimg.com/736x/8a/5c/44/8a5c44a15066e6f22ff3a3b820a1cf7a.jpg",
+            Details:
+              "The Greek Black-Figure Amphora is a type of ceramic vase produced in Ancient Greece around the 7th–5th centuries BCE. It is decorated using the black-figure technique, where figures and scenes are painted in black slip on the natural red clay. Common themes include mythology, daily life, and athletic competitions. These amphorae were used for storage, transport of goods, and as prize vessels in athletic contests.",
+          },
+          {
+            name: "Moche Portrait Vessels",
+            price: 37000,
+            img: "https://i.pinimg.com/736x/79/a2/eb/79a2eb387f3a3d73cff82a22d08f6d37.jpg",
+            Details:
+              "Moche Portrait Vessels were created by the Moche civilization in northern Peru (c. 100–700 CE). They are stirrup-spout ceramic vessels shaped to realistically depict human faces and expressions. The vessels often represent elite individuals, rulers, or important figures in Moche society. They were used for rituals, burials, and as ceremonial offerings.",
+          },
+          {
+            name: "Islamic Izink Pottery",
+            price: 27000,
+            img: "https://i.pinimg.com/736x/aa/2e/6a/aa2e6aef1fc992693f49d4add6f324e1.jpg",
+            Details:
+              "Islamic Iznik Pottery was produced in Iznik, Turkey, between the 15th and 17th centuries during the Ottoman Empire. It is known for its brightly colored ceramic tiles and vessels, often featuring floral, geometric, and calligraphic designs. Iznik pottery was used to decorate mosques, palaces, and important buildings, as well as for functional items like bowls and plates. The craft is celebrated for its precision, vibrant colors, and intricate artistic patterns.",
+          },
+          {
+            name: "Japanese Jomon Pottery",
+            price: 55000,
+            img: "https://i.pinimg.com/736x/89/88/92/8988926a44ce573366ecd17d4fc0bbc7.jpg",
+            Details:
+              "Japanese Jōmon Pottery is some of the world's oldest known pottery, dating from around 14,000–300 BCE. It is characterized by cord-marked patterns (the word Jōmon means 'cord pattern') and elaborate, often flared rims. These pots were used for cooking, storage, and ritual purposes by Japan's prehistoric Jōmon people. Jōmon pottery is celebrated for its unique designs and early evidence of ceramic craftsmanship.",
+          },
+        ],
+        paintings: [
+          {
+            name: "Monalisa",
+            price: 1500000,
+            img: "https://i.pinimg.com/1200x/fb/f4/18/fbf41841e485decc6d34607856fe554e.jpg",
+            Details:
+              "The Mona Lisa, painted by Leonardo da Vinci between 1503–1506, is a Renaissance masterpiece.It portrays Lisa Gherardini, a Florentine merchant's wife, with a mysterious smile.The painting is celebrated for its realism, sfumato technique, and psychological depth.",
+          },
+          {
+            name: "The Starry Night",
+            price: 800000,
+            img: "https://i.pinimg.com/736x/f4/76/c8/f476c829853e16534c9b857cffd1f128.jpg",
+            Details:
+              "The Starry Night was painted by Vincent van Gogh in 1889 while he was in an asylum at Saint-Rémy-de-Provence.It depicts a swirling night sky over a quiet village, expressing emotion more than reality.The work reflects van Gogh's mental struggles and fascination with nature and the cosmos.",
+          },
+          {
+            name: "Guernica",
+            price: 85000,
+            img: "https://i.pinimg.com/736x/18/7e/cf/187ecf5ad647f4e1cc57e7ba0b79d8ec.jpg",
+            Details:
+              "Guernica was painted by Pablo Picasso in 1937 as a response to the bombing of the Basque town of Guernica during the Spanish Civil War.The massive black-and-white mural portrays suffering, chaos, and the horrors of war. It became a powerful anti-war symbol and political statement of the 20th century.",
+          },
+          {
+            name: "The School of Athens",
+            price: 97000,
+            img: "https://i.pinimg.com/736x/2f/90/f8/2f90f849c239237cbd94efa47c0d8f42.jpg",
+            Details:
+              "The School of Athens was painted by Raphael between 1509–1511 as part of the decoration of the Apostolic Palace in the Vatican. It represents an ideal gathering of ancient philosophers and scientists, including Plato and Aristotle at the center.The fresco symbolizes the pursuit of knowledge, harmony, and classical wisdom during the Renaissance.",
+          },
+          {
+            name: "The Persistence Of Memory",
+            price: 76000,
+            img: "https://i.pinimg.com/736x/ab/00/84/ab00847066eb8f93419c950484a165e3.jpg",
+            Details:
+              "The Persistence of Memory was painted by Salvador Dalí in 1931, during the height of the Surrealist movement. It features melting clocks draped over landscapes and objects, symbolizing the fluidity of time.The painting reflects Dalí's interest in dreams, subconscious thought, and distorted reality.",
+          },
+        ],
+        craft: [
+          {
+            name: "Dhokra metal craft",
+            price: 87000,
+            img: "https://i.pinimg.com/736x/9e/f2/85/9ef2855cd0b9c46e019b53bf35bf9c08.jpg",
+            Details:
+              "Dhokra Metal Craft is a traditional lost-wax casting technique practiced in India for over 4,000 years, mainly by tribal artisans. It is used to create intricate bronze and brass figurines, animals, and decorative objects. The craft is notable for its rustic charm, fine details, and cultural motifs inspired by tribal folklore. Dhokra items are used for home décor, religious purposes, and collectibles, and are highly valued in the art market.",
+          },
+          {
+            name: "Benin Bronzes",
+            price: 50000,
+            img: "https://i.pinimg.com/1200x/b5/df/f5/b5dff5ce84466185370baa3bb49c62db.jpg",
+            Details:
+              "Benin Bronzes are a collection of intricately cast brass and bronze plaques, sculptures, and masks from the Kingdom of Benin (Nigeria), dating from the 13th–19th centuries CE. They depict royalty, warriors, and court ceremonies, often in high detail and relief. The bronzes were used to decorate the royal palace and document historical events. They are celebrated for their artistic skill, cultural significance, and influence on African art history.",
+          },
+          {
+            name: "Scythian Gold Artifacts",
+            price: 74000,
+            img: "https://i.pinimg.com/736x/1b/1c/07/1b1c07024ad5df19f53bbbb9fe5b5c16.jpg",
+            Details:
+              "Scythian Gold Artifacts were created by the Scythian nomadic tribes of Central Asia (7th–3rd century BCE). They include gold jewelry, plaques, and weapon decorations often featuring animals in dynamic poses. These artifacts were used for personal adornment, ceremonial purposes, and burial offerings. They are admired for their technical mastery, intricate designs, and depiction of nomadic culture and mythology.",
+          },
+          {
+            name: "African Ashanti Goldweights",
+            price: 63000,
+            img: "https://i.pinimg.com/736x/05/0e/b6/050eb625101978461fd4c453a3492941.jpg",
+            Details:
+              "African Ashanti Goldweights are small cast-brass objects made by the Ashanti people of Ghana between the 15th–19th centuries CE. They were used to measure gold dust, the currency of trade in the region. The weights often depict animals, humans, symbols, and everyday objects, reflecting Ashanti culture and proverbs. These goldweights are valued for their artistic detail, cultural storytelling, and historical significance.",
+          },
+          {
+            name: "Tibetan Butter Lamp",
+            price: 57000,
+            img: "https://i.pinimg.com/736x/e6/16/5d/e6165d51f6a8e96502eb131da8c36a8d.jpg",
+            Details:
+              "Tibetan Butter Lamps are traditional ritual lamps made of bronze, copper, or brass, used in Tibetan Buddhist practices. They are filled with clarified butter or oil and lit as offerings in monasteries, temples, and homes. The lamps symbolize enlightenment, wisdom, and the dispelling of darkness. They are often decorated with intricate engravings and play a central role in Tibetan religious ceremonies.",
+          },
+        ],
+        furniture: [
+          {
+            name: "Wooden Chair",
+            price: 12000,
+            img: "https://i.pinimg.com/736x/3b/7b/f9/3b7bf901aa93ff2ce44a619ca06d8fb3.jpg",
+            Details:
+              "Wooden Chair is a classic piece of furniture made from solid or engineered wood, valued for its durability and comfort. It comes in various styles, from traditional carved designs to modern minimalist forms. Wooden chairs are widely used in homes, offices, and public spaces for seating. They are admired for their strength, natural beauty, and ability to blend with different interiors.",
+          },
+          {
+            name: "Rustic Table",
+            price: 45000,
+            img: "https://i.pinimg.com/1200x/e9/f2/29/e9f2298f5609cadd18dbd473a826e7eb.jpg",
+            Details:
+              "Rustic Table is a handcrafted wooden table designed with a natural, rugged look that highlights raw textures and grains. It is often made from reclaimed or solid wood, giving it durability and eco-friendliness. The table suits farmhouse, vintage, and countryside interiors, adding warmth to spaces. Its charm lies in its simplicity, sturdiness, and timeless natural appeal.",
+          },
+          {
+            name: "Coquette Heart Mirror",
+            price: 15000,
+            img: "https://i.pinimg.com/736x/8a/06/e5/8a06e59417b1c5f86e6082d5c35f960b.jpg",
+            Details:
+              "Coquette Heart Mirror is a decorative mirror shaped like a heart, often framed with stylish or ornate designs. It is popular in bedrooms, vanity spaces, and décor setups, adding a touch of charm and elegance. The mirror reflects the playful, romantic 'coquette' aesthetic, often paired with pastel or vintage themes. It serves as both a functional mirror and a statement décor piece, enhancing interior beauty.",
+          },
+          {
+            name: "Kuber Solid Sheesham",
+            price: 150000,
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLyN9bjBj0keKR6EQ3sL1KIsDi8Af29ZIOQA&s",
+            Details:
+              "Kuber Solid Sheesham Bed is made from premium Sheesham wood, renowned for its strength and natural grain patterns. It offers a sturdy and durable frame, ensuring long-lasting use. The bed often features intricate carvings or a polished finish, adding elegance to the bedroom. It combines traditional craftsmanship with modern design, making it both functional and aesthetically appealing.",
+          },
+          {
+            name: "Grapewood Sofa",
+            price: 99000,
+            img: "https://i.pinimg.com/736x/a7/d0/b8/a7d0b85911020b9822fd36de74ab7005.jpg",
+            Details:
+              "Grapewood Sofa is crafted from high-quality grapewood, known for its durability and smooth finish. It provides comfortable seating with sturdy support, ideal for living rooms. The sofa often features elegant designs and polished surfaces, enhancing home décor. Grapewood furniture combines strength, style, and longevity, making it a popular choice for premium interiors.",
+          },
+        ],
+      };
+
+      let currentItems = [];
+      let currentItem = null;
+
+      // Show auth modal on page load
+      window.onload = function () {
+        openAuthModal("signin");
+        showItems("all");
+      };
+
+      function showItems(category) {
+        currentItems = [];
+        if (category === "all") {
+          Object.values(itemsData).forEach((arr) => currentItems.push(...arr));
+        } else {
+          currentItems = itemsData[category] || [];
+        }
+        renderItems(currentItems);
+      }
+
+      function renderItems(items) {
+        const container = document.getElementById("itemsList");
+        container.innerHTML = "";
+        items.forEach((item) => {
+          container.innerHTML += `
+          <div class="item-card" onclick="showHistory('${item.name}')">
+            <div class="image-container">
+              <img src="${item.img}" alt="${item.name}">
+              <div class="hover-text">Click the image to know the details</div>
+            </div>
+            <h4>${item.name}</h4>
+            <p>$${item.price}</p>
+            <button class="buy-btn" onclick="event.stopPropagation(); buyItem('${item.name}')">Buy Now</button>
+          </div>
+        `;
+        });
+      }
+
+      function toggleMenu() {
+        const menu = document.getElementById("dropdownMenu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      }
+
+      function toggleFilter() {
+        const filterMenu = document.getElementById("priceDropdown");
+        filterMenu.style.display =
+          filterMenu.style.display === "block" ? "none" : "block";
+      }
+
+      function sortItems(type) {
+        if (type === "low") {
+          currentItems.sort((a, b) => a.price - b.price);
+        } else {
+          currentItems.sort((a, b) => b.price - a.price);
+        }
+        renderItems(currentItems);
+      }
+
+      function filterByRange() {
+        const min = parseInt(document.getElementById("minPrice").value) || 0;
+        const max =
+          parseInt(document.getElementById("maxPrice").value) || Infinity;
+        const filtered = currentItems.filter(
+          (item) => item.price >= min && item.price <= max
+        );
+        renderItems(filtered);
+      }
+
+      function buyItem(name) {
+        const item = currentItems.find((i) => i.name === name);
+        if (item) {
+          alert(
+            `You are about to purchase: ${name}\nPrice: $${item.price}\n\nProceeding to checkout...`
+          );
+        }
+      }
+
+      function showHistory(name) {
+        const item = currentItems.find((i) => i.name === name);
+        if (item) {
+          currentItem = item;
+          document.getElementById("modalImg").src = item.img;
+          document.getElementById("modalName").innerText = item.name;
+          document.getElementById("modalPrice").innerText =
+            "Price: $" + item.price;
+          document.getElementById("modalDetails").innerText =
+            "Details : " + item.Details;
+          document.getElementById("productModal").style.display = "flex";
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("productModal").style.display = "none";
+      }
+
+      function openAuthModal(type) {
+        document.getElementById("authModal").style.display = "flex";
+        switchAuth(type);
+      }
+
+      function closeAuthModal() {
+        document.getElementById("authModal").style.display = "none";
+      }
+
+      function switchAuth(type) {
+        const title = document.getElementById("authTitle");
+        const action = document.getElementById("authAction");
+        const confirm = document.getElementById("authConfirm");
+        const toggleText = document.getElementById("toggleText");
+        const hiddenAction = document.getElementById("authHiddenAction");
+
+        if (type === "signin") {
+          title.innerText = "Sign In";
+          action.innerText = "Sign In";
+          confirm.style.display = "none";
+          toggleText.innerHTML = `Don't have an account? <a onclick="switchAuth('signup')">Sign Up</a>`;
+          hiddenAction.value = "signin"; // ✅ important
+        } else {
+          title.innerText = "Sign Up";
+          action.innerText = "Sign Up";
+          confirm.style.display = "block";
+          toggleText.innerHTML = `Already have an account? <a onclick="switchAuth('signin')">Sign In</a>`;
+          hiddenAction.value = "signup"; // ✅ important
+        }
+      }
+      function showSignupSuccess() {
+        document.getElementById("successMsg").innerHTML = `
+        Sign Up successful! 
+        <button type="button" onclick="switchAuth('signin')">Login</button>
+    `;
+      }
+
+      document
+        .getElementById("modalBuyBtn")
+        .addEventListener("click", function () {
+          if (currentItem) {
+            alert(
+              `You are about to purchase: ${currentItem.name}\nPrice: $${currentItem.price}\n\nProceeding to checkout...`
+            );
+          }
+        });
+
+      document
+        .getElementById("searchBox")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            const query = this.value.trim().toLowerCase();
+            if (query.includes("painting")) {
+              showItems("paintings");
+            } else if (query.includes("pottery")) {
+              showItems("pottery");
+            } else if (query.includes("furniture")) {
+              showItems("furniture");
+            } else if (
+              query.includes("handmade") ||
+              query.includes("metal craft")
+            ) {
+              showItems("craft");
+            } else {
+              showItems("all");
+            }
+          }
+        });
+    </script>
+    <script>
+      // Show form only after button click
+      document
+        .getElementById("showUploadBtn")
+        .addEventListener("click", function () {
+          document.querySelector(".upload-container").style.display = "block";
+          this.style.display = "none"; // hide the button after click
+        });
+
+      // Optional: handle form submit with AJAX to avoid new page load
+      document
+        .getElementById("uploadCraftForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+
+          fetch("upload.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              document.getElementById("uploadSuccessMsg").innerText =
+                "✅ Craft uploaded successfully!";
+              this.reset();
+            })
+            .catch((err) => {
+              document.getElementById("uploadSuccessMsg").innerText =
+                "❌ Upload failed!";
+            });
+        });
+    </script>
+
+    <script>
+      document
+        .getElementById("uploadCraftForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault(); // prevent default form submission
+
+          const form = e.target;
+          const formData = new FormData(form);
+
+          fetch("upload.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.status === "success") {
+                document.getElementById("uploadSuccessMsg").innerText =
+                  data.msg;
+                form.reset();
+              } else {
+                alert(data.msg);
+              }
+            })
+            .catch((err) => console.error(err));
+        });
+    </script>
+
+    <script>
+      async function handleAuth(formId) {
+        const form = document.getElementById(formId);
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // For signup: check confirm password
+          if (formId === "signupForm") {
+            let pass = document.getElementById("password").value;
+            let confirm = document.getElementById("confirm_password").value;
+            if (pass !== confirm) {
+              alert("Passwords do not match!");
+              return;
+            }
+          }
+
+          let formData = new FormData(form);
+
+          try {
+            let response = await fetch("auth.php", {
+              method: "POST",
+              body: formData,
+            });
+
+            let result = await response.json();
+            alert(result.msg);
+
+            if (result.status === "success") {
+              // Example: close modal & update UI
+              document.getElementById("authModal").style.display = "none";
+              document.getElementById("userGreeting").innerText = "Welcome!";
+            }
+          } catch (err) {
+            console.error("Error:", err);
+            alert("Something went wrong. Try again.");
+          }
+        });
+      }
+
+      // Attach handlers
+      document
+        .getElementById("authForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("authEmail").value.trim();
+          const password = document.getElementById("authPassword").value.trim();
+          const confirm = document.getElementById("authConfirm").value.trim();
+          const action = document.getElementById("authHiddenAction").value; // "signin" or "signup"
+
+          if (!email || !password || (action === "signup" && !confirm)) {
+            alert("Please fill all fields!");
+            return;
+          }
+
+          if (action === "signup" && password !== confirm) {
+            alert("Passwords do not match!");
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("type", action); // must match PHP
+          formData.append("email", email);
+          formData.append("password", password);
+          if (action === "signup") formData.append("confirm_password", confirm);
+
+          try {
+            const res = await fetch("auth.php", {
+              method: "POST",
+              body: formData,
+            });
+            const data = await res.json();
+
+            if (data.status === "success") {
+              // ✅ Automatic login after signup
+              if (action === "signup") {
+                // Now log in automatically
+                const loginFormData = new FormData();
+                loginFormData.append("type", "signin");
+                loginFormData.append("email", email);
+                loginFormData.append("password", password);
+
+                const loginRes = await fetch("auth.php", {
+                  method: "POST",
+                  body: loginFormData,
+                });
+                const loginData = await loginRes.json();
+
+                if (loginData.status === "success") {
+                  // Redirect to project.html after successful login
+                  window.location.href = "project.html";
+                } else {
+                  alert(
+                    "Signup successful but auto-login failed: " +
+                      loginData.message
+                  );
+                }
+              } else {
+                // Signin success
+                window.location.href = "project.html";
+              }
+            } else {
+              alert(data.message);
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Something went wrong.");
+          }
+        });
+    </script>
+  </body>
+</html>
